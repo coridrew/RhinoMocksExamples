@@ -107,6 +107,7 @@ namespace RhinoMocksExamples
 
     // Time for tests.
 
+    [TestFixture]
     public class When_working_with_a_stub_of_an_interface
     {
         // "stub" == "fake"
@@ -355,6 +356,7 @@ namespace RhinoMocksExamples
         }
     }
 
+    [TestFixture]
     public class When_working_with_a_mock_of_an_interface
     {
         // You can do pretty much everything with stubs.  I don't see a reason
@@ -417,6 +419,7 @@ namespace RhinoMocksExamples
         }
     }
 
+    [TestFixture]
     public class When_working_with_a_partial_mock_of_a_concrete_class
     {
         [Test]
