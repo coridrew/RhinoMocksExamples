@@ -26,9 +26,10 @@ namespace RhinoMocksExamples
             var stub = MockRepository.GenerateStub<ISampleInterface>();
             const string extraParameter = "something extra";
             const int intToReturn = 9;
-            stub.Stub(s => s.MethodThatReturnsInteger(extraParameter)).Return(intToReturn);
             var interactor = new InteractingClass();
-            
+            stub.Stub(s => s.MethodThatReturnsInteger(extraParameter))
+                .Return(intToReturn);
+
             var result = interactor.AddWithTheInterface(stub, extraParameter);
             
             Assert.That(result, Is.EqualTo(intToReturn + 7));
@@ -39,9 +40,10 @@ namespace RhinoMocksExamples
         {
             var mock = MockRepository.GenerateMock<ISampleInterface>();
             const int intToReturn = 9;
-            mock.Stub(s => s.MethodThatReturnsInteger(Arg<string>.Is.Anything)).Return(intToReturn);
             const string extraParameter = "something extra";
             var interactor = new InteractingClass();
+            mock.Stub(s => s.MethodThatReturnsInteger(Arg<string>.Is.Anything))
+                .Return(intToReturn);
 
             var result = interactor.AddWithTheInterface(mock, extraParameter);
 
@@ -54,7 +56,10 @@ namespace RhinoMocksExamples
         {
             var stub = MockRepository.GenerateStub<ISampleInterface>();
             const string extraParameter = "my string";
-            stub.Property = extraParameter; //Rhino Mocks calls this "Property Behavior"
+
+            //Rhino Mocks calls this "Property Behavior"
+            stub.Property = extraParameter;
+            
             Assert.That(stub.Property, Is.EqualTo(extraParameter));
         }
 
@@ -62,31 +67,37 @@ namespace RhinoMocksExamples
         public void Mocks_do_not_have_settable_properties()
         {
             var mock = MockRepository.GenerateMock<ISampleInterface>();
-            const string extraParameter = "my string";
+
             mock.Property = "my string";
+            
             Assert.That(mock.Property, Is.Null);
         }
 
         [Test]
         public void Only_mocks_verify_their_expectations()
         {
-            //This is a legacy point. I recommend the AssertWasCalled syntax over the VerifyAll.
+            //This is a legacy point. 
+            //I recommend the AssertWasCalled syntax over the VerifyAll.
             var mock = MockRepository.GenerateMock<ISampleInterface>();
-            mock.Expect(m => m.MethodThatReturnsInteger(Arg<string>.Is.Anything)).Return(4);
             var interactor = new InteractingClass();
+            mock.Expect(m => m.MethodThatReturnsInteger(Arg<string>.Is.Anything)).Return(4);
+            
             interactor.IgnoreTheInterface(mock);
 
-            //This should (and does) throw an expectation violation. Correctly failing test.
+            //This should (and does) throw an expectation violation. 
+            //Correctly failing test.
             mock.VerifyAllExpectations();
         }
 
         [Test]
         public void Stubs_do_not_verify_their_expectations()
         {
-            //This is a legacy point. I recommend the AssertWasCalled syntax over the VerifyAll.
+            //This is a legacy point. 
+            //I recommend the AssertWasCalled syntax over the VerifyAll.
             var stub = MockRepository.GenerateStub<ISampleInterface>();
-            stub.Expect(s => s.MethodThatReturnsInteger(Arg<string>.Is.Anything)).Return(4);
             var interactor = new InteractingClass();
+            stub.Expect(s => s.MethodThatReturnsInteger(Arg<string>.Is.Anything)).Return(4);
+
             interactor.IgnoreTheInterface(stub);
 
             //This will silently pass, as if InteractingClass were meeting your expectations. 
@@ -97,10 +108,11 @@ namespace RhinoMocksExamples
         [Test]
         public void Stubs_now_apply_AssertWasCalled()
         {
-            //In prior versions of Rhino Mocks, AssertWasCalled and AssertWasNotCalled on 
-            //stubs would silently pass.
-            var stub = MockRepository.GenerateStub<ISampleInterface>();
+            //In prior versions of Rhino Mocks, AssertWasCalled and 
+            //AssertWasNotCalled on stubs would silently pass.
             var interactor = new InteractingClass();
+            var stub = MockRepository.GenerateStub<ISampleInterface>();
+            
             interactor.IgnoreTheInterface(stub);
 
             //This should (and does) throw an expectation violation in 3.5+. 
@@ -111,10 +123,11 @@ namespace RhinoMocksExamples
         [Test]
         public void Stubs_now_apply_AssertWasNotCalled()
         {
-            //In prior versions of Rhino Mocks, AssertWasCalled and AssertWasNotCalled on 
-            //stubs would silently pass.
-            var stub = MockRepository.GenerateStub<ISampleInterface>();
+            //In prior versions of Rhino Mocks, AssertWasCalled and 
+            //AssertWasNotCalled on stubs would silently pass.
             var interactor = new InteractingClass();
+            var stub = MockRepository.GenerateStub<ISampleInterface>();
+
             interactor.AddWithTheInterface(stub);
 
             //This should (and does) throw an expectation violation in 3.6. 
