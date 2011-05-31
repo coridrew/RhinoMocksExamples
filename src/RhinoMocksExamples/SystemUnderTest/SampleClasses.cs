@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RhinoMocksExamples.SystemUnderTest
 {
@@ -11,6 +12,8 @@ namespace RhinoMocksExamples.SystemUnderTest
         object MethodThatReturnsObject(int i);
         void MethodWithOutParameter(out int i);
         void MethodWithRefParameter(ref string i);
+        void MethodWithTwoParameters(string first, string second);
+        void MethodWithEnumerable(IEnumerable<int> numbers);
 
         event EventHandler SomeEvent;
     }
@@ -22,18 +25,40 @@ namespace RhinoMocksExamples.SystemUnderTest
             sampleInterface.VoidMethod();
         }
 
-        public void IgnoreTheInterface(ISampleInterface sampleInterface)
-        {
-        }
+        public void IgnoreTheInterface(ISampleInterface sampleInterface) { }
 
-        public int AddWithTheInterface(ISampleInterface sampleInterface, string extraParameter)
+        public int AddSevenToTheInterface(ISampleInterface sampleInterface, string extraParameter)
         {
             return sampleInterface.MethodThatReturnsInteger(extraParameter) + 7;
         }
 
-        public int AddWithTheInterface(ISampleInterface sampleInterface)
+        public int AddSevenToTheInterface(ISampleInterface sampleInterface)
         {
             return sampleInterface.MethodThatReturnsInteger(sampleInterface.Property) + 7;
+        }
+
+        public void SetPropertyOnTheInterface(ISampleInterface sampleInterface, string newValue)
+        {
+            sampleInterface.Property = newValue;
+        }
+
+        public void BuildTheNumberList(ISampleInterface sampleInterface, int endingNumber)
+        {
+            var numbers = new List<int>();
+            int u = 0;
+            int d = endingNumber;
+            while (d - u > 0)
+            {
+                numbers.Add(u);
+                numbers.Add(d);
+                u++;
+                d--;
+            }
+            if (u == d)
+            {
+                numbers.Add(u);
+            }
+            sampleInterface.MethodWithEnumerable(numbers);
         }
     }
 

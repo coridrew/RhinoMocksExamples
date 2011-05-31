@@ -30,7 +30,7 @@ namespace RhinoMocksExamples
             stub.Stub(s => s.MethodThatReturnsInteger(extraParameter))
                 .Return(intToReturn);
 
-            var result = interactor.AddWithTheInterface(stub, extraParameter);
+            var result = interactor.AddSevenToTheInterface(stub, extraParameter);
             
             Assert.That(result, Is.EqualTo(intToReturn + 7));
         }
@@ -45,7 +45,7 @@ namespace RhinoMocksExamples
             mock.Stub(s => s.MethodThatReturnsInteger(Arg<string>.Is.Anything))
                 .Return(intToReturn);
 
-            var result = interactor.AddWithTheInterface(mock, extraParameter);
+            var result = interactor.AddSevenToTheInterface(mock, extraParameter);
 
             mock.AssertWasCalled(m => m.MethodThatReturnsInteger(extraParameter));
             Assert.That(result, Is.EqualTo(intToReturn + 7));
@@ -128,7 +128,7 @@ namespace RhinoMocksExamples
             var interactor = new InteractingClass();
             var stub = MockRepository.GenerateStub<ISampleInterface>();
 
-            interactor.AddWithTheInterface(stub);
+            interactor.AddSevenToTheInterface(stub);
 
             //This should (and does) throw an expectation violation in 3.6. 
             //Correctly failing test.
