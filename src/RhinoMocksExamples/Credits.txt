@@ -1,0 +1,13 @@
+﻿The inspiration for tests-as-docs, and the origin 
+of this project, come from Jon Kruger:
+https://github.com/JonKruger/RhinoMocksExamples
+http://jonkruger.com/blog/
+
+Rhino Mocks documentation
+http://ayende.com/Wiki/Rhino+Mocks+3.5.ashx
+
+Rhino Mocks source code
+https://github.com/ayende/rhino-mocks
+
+This project
+https://github.com/scichelli/RhinoMocksExamples

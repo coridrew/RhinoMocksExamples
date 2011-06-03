@@ -10,12 +10,8 @@ namespace RhinoMocksExamples.SystemUnderTest
         void VoidMethod();
         int MethodThatReturnsInteger(string s);
         object MethodThatReturnsObject(int i);
-        void MethodWithOutParameter(out int i);
-        void MethodWithRefParameter(ref string i);
         void MethodWithTwoParameters(string first, string second);
         void MethodWithEnumerable(IEnumerable<int> numbers);
-
-        event EventHandler SomeEvent;
     }
 
     public class InteractingClass
@@ -23,6 +19,12 @@ namespace RhinoMocksExamples.SystemUnderTest
         public void CallTheInterface(ISampleInterface sampleInterface)
         {
             sampleInterface.VoidMethod();
+        }
+
+        public int CallTheInterfaceTwice(ISampleInterface sampleInterface)
+        {
+            return sampleInterface.MethodThatReturnsInteger("foo")
+                   + sampleInterface.MethodThatReturnsInteger("bar");
         }
 
         public void IgnoreTheInterface(ISampleInterface sampleInterface) { }
@@ -42,7 +44,7 @@ namespace RhinoMocksExamples.SystemUnderTest
             sampleInterface.Property = newValue;
         }
 
-        public void BuildTheNumberList(ISampleInterface sampleInterface, int endingNumber)
+        public void SendTheNumberList(ISampleInterface sampleInterface, int endingNumber)
         {
             var numbers = new List<int>();
             int u = 0;
@@ -59,75 +61,6 @@ namespace RhinoMocksExamples.SystemUnderTest
                 numbers.Add(u);
             }
             sampleInterface.MethodWithEnumerable(numbers);
-        }
-    }
-
-    public class SampleClass
-    {
-        private string _nonVirtualProperty;
-
-        private string _virtualProperty;
-
-        public SampleClass()
-        {
-        }
-
-        public SampleClass(string value)
-        {
-            SetByConstructor = value;
-        }
-
-        public string NonVirtualProperty
-        {
-            get { return _nonVirtualProperty; }
-            set
-            {
-                _nonVirtualProperty = value;
-                NonVirtualPropertyWasSet = true;
-            }
-        }
-
-        public virtual string VirtualProperty
-        {
-            get { return _virtualProperty; }
-            set
-            {
-                _virtualProperty = value;
-                VirtualPropertyWasSet = true;
-            }
-        }
-
-        public string SetByConstructor { get; private set; }
-        public bool NonVirtualPropertyWasSet { get; set; }
-        public bool VirtualPropertyWasSet { get; set; }
-        public bool VoidMethodWasCalled { get; set; }
-        public bool VirtualMethodWasCalled { get; set; }
-        public bool NonVirtualMethodWasCalled { get; set; }
-
-        public event EventHandler SomeEvent;
-        public virtual event EventHandler SomeVirtualEvent;
-
-        public void VoidMethod()
-        {
-            VoidMethodWasCalled = true;
-        }
-
-        public virtual int VirtualMethod(string s)
-        {
-            VirtualMethodWasCalled = true;
-            return s.Length;
-        }
-
-        public IList<int> NonVirtualMethod(int i)
-        {
-            NonVirtualMethodWasCalled = true;
-            return new List<int> {i};
-        }
-
-        public void FireSomeVirtualEvent()
-        {
-            if (SomeVirtualEvent != null)
-                SomeVirtualEvent(this, EventArgs.Empty);
         }
     }
 }
