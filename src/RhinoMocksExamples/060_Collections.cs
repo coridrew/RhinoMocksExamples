@@ -60,7 +60,7 @@ namespace RhinoMocksExamples
                     Arg<IEnumerable<int>>.List.Element(3, Is.GreaterThan(2))));
         }
 
-        [Test]
+        [Test, Explicit("This will fail, to show that List.Equal verifies the order of items.")]
         public void Equal_verifies_all_elements_in_order()
         {
             var expected = new[] {0, 1, 2, 3};
@@ -75,3 +75,18 @@ namespace RhinoMocksExamples
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

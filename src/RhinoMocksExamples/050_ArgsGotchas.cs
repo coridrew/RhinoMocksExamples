@@ -46,7 +46,7 @@ namespace RhinoMocksExamples
                         Arg<string>.Matches(s => s.StartsWith("my "))));
             }
 
-            [Test]
+            [Test, Explicit("This throws a Rhino Mocks exception, to point out the incorrect syntax.")]
             public void Mixing_types_and_arg_constraints_throws_an_exception()
             {
                 //Throws an invalid operation exception.
@@ -67,3 +67,18 @@ namespace RhinoMocksExamples
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

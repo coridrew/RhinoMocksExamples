@@ -3,7 +3,6 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using RhinoMocksExamples.SystemUnderTest;
 using Should.Extensions.AssertExtensions;
-using Is = Rhino.Mocks.Constraints.Is;
 
 namespace RhinoMocksExamples
 {
@@ -78,7 +77,23 @@ namespace RhinoMocksExamples
             _mock.MethodThatReturnsInteger("hi");
 
             _mock.AssertWasCalled(
-                m => m.MethodThatReturnsInteger(Arg<string>.List.OneOf(permittedValues)));
+                m => m.MethodThatReturnsInteger(
+                    Arg<string>.List.OneOf(permittedValues)));
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

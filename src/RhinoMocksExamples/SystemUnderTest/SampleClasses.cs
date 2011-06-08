@@ -1,15 +1,13 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace RhinoMocksExamples.SystemUnderTest
 {
     public interface ISampleInterface
     {
+        string ReadonlyProperty { get; }
         string Property { get; set; }
         void VoidMethod();
         int MethodThatReturnsInteger(string s);
-        object MethodThatReturnsObject(int i);
         void MethodWithTwoParameters(string first, string second);
         void MethodWithEnumerable(IEnumerable<int> numbers);
     }
@@ -64,3 +62,18 @@ namespace RhinoMocksExamples.SystemUnderTest
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -73,7 +73,7 @@ namespace RhinoMocksExamples
             Assert.That(mock.Property, Is.Null);
         }
 
-        [Test]
+        [Test, Explicit("This will fail, since the class under test does not comply with its expectations.")]
         public void Only_mocks_verify_their_expectations()
         {
             //This is a legacy point. 
@@ -105,7 +105,7 @@ namespace RhinoMocksExamples
             stub.VerifyAllExpectations(); 
         }
 
-        [Test]
+        [Test, Explicit("This will fail, since the class under test does not satisfy the assertion.")]
         public void Stubs_now_apply_AssertWasCalled()
         {
             //In prior versions of Rhino Mocks, AssertWasCalled and 
@@ -120,7 +120,7 @@ namespace RhinoMocksExamples
             stub.AssertWasCalled(s => s.MethodThatReturnsInteger(Arg<string>.Is.Anything));
         }
 
-        [Test]
+        [Test, Explicit("This will fail, since the class under test flouts the assertion.")]
         public void Stubs_now_apply_AssertWasNotCalled()
         {
             //In prior versions of Rhino Mocks, AssertWasCalled and 
@@ -136,3 +136,18 @@ namespace RhinoMocksExamples
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
