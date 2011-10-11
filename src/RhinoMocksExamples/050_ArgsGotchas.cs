@@ -10,39 +10,39 @@ namespace RhinoMocksExamples
         [TestFixture]
         public class Arg_of_T_cannot_mix_with_simple_arg_types
         {
-            private ISampleInterface _mock;
-            private InteractingClass _interactor;
+            private IGameResultsService _mock;
+            private Game _game;
 
             [SetUp]
             public void SetUp()
             {
-                _mock = MockRepository.GenerateMock<ISampleInterface>();
-                _interactor = new InteractingClass();
+                _mock = MockRepository.GenerateMock<IGameResultsService>();
+                _game = new Game();
             }
 
             [Test]
             public void You_can_stub_and_assert_directly_with_types()
             {
-                _mock.Stub(m => m.MethodThatReturnsInteger("my string"))
+                _mock.Stub(m => m.GetMagicNumber("my string"))
                     .Return(6);
 
-                var result = _interactor.AddSevenToTheInterface(_mock, "my string");
+                var result = _game.CalculateMagicNumber(_mock, "my string");
                 
                 result.ShouldEqual(6 + 7);
-                _mock.AssertWasCalled(m => m.MethodThatReturnsInteger("my string"));
+                _mock.AssertWasCalled(m => m.GetMagicNumber("my string"));
             }
 
             [Test]
             public void You_can_stub_and_assert_with_arg_constraints()
             {
-                _mock.Stub(m => m.MethodThatReturnsInteger(Arg<string>.Is.Anything))
+                _mock.Stub(m => m.GetMagicNumber(Arg<string>.Is.Anything))
                     .Return(6);
 
-                var result = _interactor.AddSevenToTheInterface(_mock, "my string");
+                var result = _game.CalculateMagicNumber(_mock, "my string");
 
                 result.ShouldEqual(6 + 7);
                 _mock.AssertWasCalled(
-                    m => m.MethodThatReturnsInteger(
+                    m => m.GetMagicNumber(
                         Arg<string>.Matches(s => s.StartsWith("my "))));
             }
 
@@ -51,7 +51,7 @@ namespace RhinoMocksExamples
             {
                 //Throws an invalid operation exception.
                 _mock.Stub(
-                    m => m.MethodWithTwoParameters(
+                    m => m.PublishWinners(
                         "first string",
                         Arg<string>.Is.Anything));
             }
@@ -60,7 +60,7 @@ namespace RhinoMocksExamples
             public void Use_Arg_Is_when_you_need_to_mix()
             {
                 _mock.Stub(
-                    m => m.MethodWithTwoParameters(
+                    m => m.PublishWinners(
                         Arg<string>.Is.Equal("first string"),
                         Arg<string>.Is.Anything));
             }

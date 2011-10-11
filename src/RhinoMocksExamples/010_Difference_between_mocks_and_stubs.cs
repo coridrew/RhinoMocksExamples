@@ -7,70 +7,70 @@ namespace RhinoMocksExamples
     [TestFixture]
     public class Difference_between_mocks_and_stubs
     {
-        //The InteractingClass is the class under test in this fixture.
+        //The Game is the class under test in this fixture.
 
         [Test]
         public void Mocks_are_semantically_important_to_the_test()
         {
-            var mock = MockRepository.GenerateMock<ISampleInterface>();
-            var interactor = new InteractingClass();
+            var service = MockRepository.GenerateMock<IGameResultsService>();
+            var game = new Game();
 
-            interactor.CallTheInterface(mock);
+            game.StartGame(service);
             
-            mock.AssertWasCalled(m => m.VoidMethod());
+            service.AssertWasCalled(s => s.DoSomething());
         }
 
         [Test]
         public void Stubs_are_supporting_players()
         {
-            var stub = MockRepository.GenerateStub<ISampleInterface>();
-            const string extraParameter = "something extra";
-            const int intToReturn = 9;
-            var interactor = new InteractingClass();
-            stub.Stub(s => s.MethodThatReturnsInteger(extraParameter))
-                .Return(intToReturn);
+            var service = MockRepository.GenerateStub<IGameResultsService>();
+            const string magicWord = "something extra";
+            const int magicNumberSeed = 9;
+            var game = new Game();
+            service.Stub(s => s.GetMagicNumber(magicWord))
+                .Return(magicNumberSeed);
 
-            var result = interactor.AddSevenToTheInterface(stub, extraParameter);
+            var result = game.CalculateMagicNumber(service, magicWord);
             
-            Assert.That(result, Is.EqualTo(intToReturn + 7));
+            Assert.That(result, Is.EqualTo(magicNumberSeed + 7));
         }
 
         [Test]
         public void You_can_stub_behavior_for_mocks_too()
         {
-            var mock = MockRepository.GenerateMock<ISampleInterface>();
-            const int intToReturn = 9;
-            const string extraParameter = "something extra";
-            var interactor = new InteractingClass();
-            mock.Stub(s => s.MethodThatReturnsInteger(Arg<string>.Is.Anything))
-                .Return(intToReturn);
+            var service = MockRepository.GenerateMock<IGameResultsService>();
+            const int magicNumberSeed = 9;
+            const string magicWord = "something extra";
+            var game = new Game();
+            service.Stub(s => s.GetMagicNumber(Arg<string>.Is.Anything))
+                .Return(magicNumberSeed);
 
-            var result = interactor.AddSevenToTheInterface(mock, extraParameter);
+            var result = game.CalculateMagicNumber(service, magicWord);
 
-            mock.AssertWasCalled(m => m.MethodThatReturnsInteger(extraParameter));
-            Assert.That(result, Is.EqualTo(intToReturn + 7));
+            service.AssertWasCalled(s => s.GetMagicNumber(magicWord));
+            Assert.That(result, Is.EqualTo(magicNumberSeed + 7));
         }
 
         [Test]
         public void Stubs_have_settable_properties()
         {
-            var stub = MockRepository.GenerateStub<ISampleInterface>();
-            const string extraParameter = "my string";
+            var service = MockRepository.GenerateStub<IGameResultsService>();
+            const string newFavoriteBand = "my string";
 
             //Rhino Mocks calls this "Property Behavior"
-            stub.Property = extraParameter;
+            service.FavoriteBand = newFavoriteBand;
             
-            Assert.That(stub.Property, Is.EqualTo(extraParameter));
+            Assert.That(service.FavoriteBand, Is.EqualTo(newFavoriteBand));
         }
 
         [Test]
         public void Mocks_do_not_have_settable_properties()
         {
-            var mock = MockRepository.GenerateMock<ISampleInterface>();
+            var service = MockRepository.GenerateMock<IGameResultsService>();
 
-            mock.Property = "my string";
+            service.FavoriteBand = "my string";
             
-            Assert.That(mock.Property, Is.Null);
+            Assert.That(service.FavoriteBand, Is.Null);
         }
 
         [Test, Explicit("This will fail, since the class under test does not comply with its expectations.")]
@@ -78,15 +78,15 @@ namespace RhinoMocksExamples
         {
             //This is a legacy point. 
             //I recommend the AssertWasCalled syntax over the VerifyAll.
-            var mock = MockRepository.GenerateMock<ISampleInterface>();
-            var interactor = new InteractingClass();
-            mock.Expect(m => m.MethodThatReturnsInteger(Arg<string>.Is.Anything)).Return(4);
+            var service = MockRepository.GenerateMock<IGameResultsService>();
+            var game = new Game();
+            service.Expect(m => m.GetMagicNumber(Arg<string>.Is.Anything)).Return(4);
             
-            interactor.IgnoreTheInterface(mock);
+			game.IgnoreTheService(service);
 
             //This should (and does) throw an expectation violation. 
             //Correctly failing test.
-            mock.VerifyAllExpectations();
+            service.VerifyAllExpectations();
         }
 
         [Test]
@@ -94,15 +94,15 @@ namespace RhinoMocksExamples
         {
             //This is a legacy point. 
             //I recommend the AssertWasCalled syntax over the VerifyAll.
-            var stub = MockRepository.GenerateStub<ISampleInterface>();
-            var interactor = new InteractingClass();
-            stub.Expect(s => s.MethodThatReturnsInteger(Arg<string>.Is.Anything)).Return(4);
+            var service = MockRepository.GenerateStub<IGameResultsService>();
+            var game = new Game();
+            service.Expect(s => s.GetMagicNumber(Arg<string>.Is.Anything)).Return(4);
 
-            interactor.IgnoreTheInterface(stub);
+            game.IgnoreTheService(service);
 
-            //This will silently pass, as if InteractingClass were meeting your expectations. 
+            //This will silently pass, as if Game were meeting your expectations. 
             //Falsely passing test.
-            stub.VerifyAllExpectations(); 
+            service.VerifyAllExpectations(); 
         }
 
         [Test, Explicit("This will fail, since the class under test does not satisfy the assertion.")]
@@ -110,14 +110,14 @@ namespace RhinoMocksExamples
         {
             //In prior versions of Rhino Mocks, AssertWasCalled and 
             //AssertWasNotCalled on stubs would silently pass.
-            var interactor = new InteractingClass();
-            var stub = MockRepository.GenerateStub<ISampleInterface>();
+            var game = new Game();
+            var service = MockRepository.GenerateStub<IGameResultsService>();
             
-            interactor.IgnoreTheInterface(stub);
+            game.IgnoreTheService(service);
 
             //This should (and does) throw an expectation violation in 3.5+. 
             //Correctly failing test.
-            stub.AssertWasCalled(s => s.MethodThatReturnsInteger(Arg<string>.Is.Anything));
+            service.AssertWasCalled(s => s.GetMagicNumber(Arg<string>.Is.Anything));
         }
 
         [Test, Explicit("This will fail, since the class under test flouts the assertion.")]
@@ -125,14 +125,14 @@ namespace RhinoMocksExamples
         {
             //In prior versions of Rhino Mocks, AssertWasCalled and 
             //AssertWasNotCalled on stubs would silently pass.
-            var interactor = new InteractingClass();
-            var stub = MockRepository.GenerateStub<ISampleInterface>();
+            var game = new Game();
+            var service = MockRepository.GenerateStub<IGameResultsService>();
 
-            interactor.AddSevenToTheInterface(stub);
+            game.CalculateMagicNumber(service);
 
             //This should (and does) throw an expectation violation in 3.6. 
             //Correctly failing test.
-            stub.AssertWasNotCalled(s => s.MethodThatReturnsInteger(Arg<string>.Is.Anything));
+            service.AssertWasNotCalled(s => s.GetMagicNumber(Arg<string>.Is.Anything));
         }
     }
 }

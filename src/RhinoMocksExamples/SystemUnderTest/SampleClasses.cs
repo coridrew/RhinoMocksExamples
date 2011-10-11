@@ -2,47 +2,47 @@ using System.Collections.Generic;
 
 namespace RhinoMocksExamples.SystemUnderTest
 {
-    public interface ISampleInterface
+    public interface IGameResultsService
     {
-        string ReadonlyProperty { get; }
-        string Property { get; set; }
-        void VoidMethod();
-        int MethodThatReturnsInteger(string s);
-        void MethodWithTwoParameters(string first, string second);
-        void MethodWithEnumerable(IEnumerable<int> numbers);
+        string FirstName { get; }
+        string FavoriteBand { get; set; }
+        void DoSomething();
+        int GetMagicNumber(string s);
+        void PublishWinners(string first, string second);
+        void PublishScores(IEnumerable<int> numbers);
     }
 
-    public class InteractingClass
+    public class Game
     {
-        public void CallTheInterface(ISampleInterface sampleInterface)
+        public void StartGame(IGameResultsService resultsService)
         {
-            sampleInterface.VoidMethod();
+            resultsService.DoSomething();
         }
 
-        public int CallTheInterfaceTwice(ISampleInterface sampleInterface)
+        public int GetMagicNumberTwice(IGameResultsService resultsService)
         {
-            return sampleInterface.MethodThatReturnsInteger("foo")
-                   + sampleInterface.MethodThatReturnsInteger("bar");
+            return resultsService.GetMagicNumber("foo")
+                   + resultsService.GetMagicNumber("bar");
         }
 
-        public void IgnoreTheInterface(ISampleInterface sampleInterface) { }
+        public void IgnoreTheService(IGameResultsService resultsService) { }
 
-        public int AddSevenToTheInterface(ISampleInterface sampleInterface, string extraParameter)
+        public int CalculateMagicNumber(IGameResultsService resultsService, string magicWord)
         {
-            return sampleInterface.MethodThatReturnsInteger(extraParameter) + 7;
+            return resultsService.GetMagicNumber(magicWord) + 7;
         }
 
-        public int AddSevenToTheInterface(ISampleInterface sampleInterface)
+        public int CalculateMagicNumber(IGameResultsService resultsService)
         {
-            return sampleInterface.MethodThatReturnsInteger(sampleInterface.Property) + 7;
+            return resultsService.GetMagicNumber(resultsService.FavoriteBand) + 7;
         }
 
-        public void SetPropertyOnTheInterface(ISampleInterface sampleInterface, string newValue)
+        public void UpdateFavoriteBand(IGameResultsService resultsService, string newFavoriteBand)
         {
-            sampleInterface.Property = newValue;
+            resultsService.FavoriteBand = newFavoriteBand;
         }
 
-        public void SendTheNumberList(ISampleInterface sampleInterface, int endingNumber)
+        public void SendScores(IGameResultsService resultsService, int endingNumber)
         {
             var numbers = new List<int>();
             int u = 0;
@@ -58,7 +58,7 @@ namespace RhinoMocksExamples.SystemUnderTest
             {
                 numbers.Add(u);
             }
-            sampleInterface.MethodWithEnumerable(numbers);
+            resultsService.PublishScores(numbers);
         }
     }
 }
