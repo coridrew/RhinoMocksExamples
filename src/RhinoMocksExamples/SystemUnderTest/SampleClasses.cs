@@ -21,8 +21,9 @@ namespace RhinoMocksExamples.SystemUnderTest
 
         public int GetMagicNumberTwice(IGameResultsService resultsService)
         {
-            return resultsService.GetMagicNumber("foo")
-                   + resultsService.GetMagicNumber("bar");
+        	var first = resultsService.GetMagicNumber("foo");
+        	var second = resultsService.GetMagicNumber("bar");
+        	return first + second;
         }
 
         public void IgnoreTheService(IGameResultsService resultsService) { }

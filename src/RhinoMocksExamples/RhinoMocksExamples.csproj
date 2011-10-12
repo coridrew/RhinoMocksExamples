@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="000_GettingOurBearings.cs" />
     <Compile Include="010_Difference_between_mocks_and_stubs.cs" />
     <Compile Include="020_MocksGotchas.cs" />
     <Compile Include="050_ArgsGotchas.cs" />
